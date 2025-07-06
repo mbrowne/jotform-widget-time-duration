@@ -14,8 +14,14 @@
         padding: 0 0.625em;
       }
 
+      form {
+        display: flex;
+        align-items: end;
+      }
+
       #errors {
         color: red;
+        margin: 0 0 0 1rem;
       }
 
       .duration-inputs {
@@ -95,10 +101,19 @@
         validate(e.target.name, value)
       })
 
-      form.addEventListener('change', (e) => {
+      form.addEventListener('focusout', (e) => {
         const { target } = e
         if (!isNaN(parseInt(target.value))) {
           target.value = target.value.padStart(2, '0')
+        } else if (target.name != 'hours') {
+          target.value = '00'
+        }
+      })
+
+      // trigger validation as soon as user clicks outside of form
+      document.addEventListener('click', ({ target }) => {
+        if (!form.contains(target)) {
+          form.reportValidity()
         }
       })
 
