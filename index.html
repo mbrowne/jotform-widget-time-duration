@@ -105,21 +105,26 @@
         const { target } = e
         if (!isNaN(parseInt(target.value))) {
           target.value = target.value.padStart(2, '0')
-        } else if (target.name != 'hours') {
+        } else if (target.name != 'hours' && !allFieldsEmpty()) {
           target.value = '00'
         }
       })
 
+      function allFieldsEmpty() {
+        return Array.from(form).every(
+          (field) => field.value == '' || field.value == '00'
+        )
+      }
+
       // trigger validation as soon as user clicks outside of form
       document.addEventListener('click', ({ target }) => {
-        if (!form.contains(target)) {
+        if (!form.contains(target) && !allFieldsEmpty()) {
           form.reportValidity()
         }
       })
 
       function validate(fieldName, value) {
-        const int = parseInt(value)
-        if (fieldName != 'hours' && int > 59) {
+        if (value != '' && parseInt(value) > 59) {
           const errMsg = `Invalid value for ${fieldName}`
           validationErrors.set(fieldName, errMsg)
           errorsContainer.innerHTML = errMsg
