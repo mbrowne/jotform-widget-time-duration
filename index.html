@@ -144,8 +144,10 @@
         }
       }
 
-      // JFCustomWidget.subscribe('ready', () => {
-      // })
+      JFCustomWidget.subscribe('ready', () => {
+        // mark as invalid by default
+        JFCustomWidget.setWidgetValidity(false)
+      })
 
       // subscribe to form submit event
       JFCustomWidget.subscribe('submit', () => {
