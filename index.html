@@ -112,6 +112,7 @@
           target.value = '00'
         }
 
+        console.log('set validity to', validationErrors.size == 0)
         JFCustomWidget.setWidgetValidity(validationErrors.size == 0)
       })
 
@@ -150,6 +151,9 @@
             .map((val) => val || '00')
             .join(':')
           // console.log('durationValue', durationValue)
+
+          // temp
+          console.log('valid = ', validationErrors.size == 0)
 
           // send value to JotForm
           JFCustomWidget.sendSubmit({
