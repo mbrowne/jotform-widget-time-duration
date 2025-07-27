@@ -144,22 +144,23 @@
         }
       }
 
-      JFCustomWidget.subscribe('ready', () => {
-        // subscribe to form submit event
-        JFCustomWidget.subscribe('submit', () => {
-          const durationValue = [...new FormData(form).values()]
-            .map((val) => val || '00')
-            .join(':')
-          // console.log('durationValue', durationValue)
+      // JFCustomWidget.subscribe('ready', () => {
+      // })
 
-          // temp
-          console.log('valid = ', validationErrors.size == 0)
+      // subscribe to form submit event
+      JFCustomWidget.subscribe('submit', () => {
+        const durationValue = [...new FormData(form).values()]
+          .map((val) => val || '00')
+          .join(':')
+        // console.log('durationValue', durationValue)
 
-          // send value to JotForm
-          JFCustomWidget.sendSubmit({
-            valid: validationErrors.size == 0,
-            value: durationValue,
-          })
+        // temp
+        console.log('valid = ', validationErrors.size == 0)
+
+        // send value to JotForm
+        JFCustomWidget.sendSubmit({
+          valid: validationErrors.size == 0,
+          value: durationValue,
         })
       })
     </script>
