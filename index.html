@@ -111,6 +111,8 @@
         } else if (target.name != 'hours' && !allFieldsEmpty()) {
           target.value = '00'
         }
+
+        JFCustomWidget.setWidgetValidity(validationErrors.size == 0)
       })
 
       function allFieldsEmpty() {
@@ -144,8 +146,8 @@
       JFCustomWidget.subscribe('ready', () => {
         // subscribe to form submit event
         JFCustomWidget.subscribe('submit', () => {
-          const durationValue = ['hours', 'minutes', 'seconds']
-            .map((key) => form[key].value || '00')
+          const durationValue = [...new FormData(form).values()]
+            .map((val) => val || '00')
             .join(':')
           // console.log('durationValue', durationValue)
 
