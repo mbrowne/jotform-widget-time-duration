@@ -114,7 +114,7 @@
         }
 
         validate(target.name, target.value)
-        JFCustomWidget.setWidgetValidity(validationErrors.size == 0)
+        // JFCustomWidget.setWidgetValidity(validationErrors.size == 0)
       })
 
       function allFieldsEmpty() {
@@ -157,16 +157,21 @@
 
       JFCustomWidget.subscribe('ready', () => {
         // Set validity to false by default
-        JFCustomWidget.setWidgetValidity(false)
+        // JFCustomWidget.setWidgetValidity(false)
+
+        if (JFCustomWidget.getWidgetSetting('CustomIsRequired') == 'Yes') {
+          JFCustomWidget.makeWidgetRequired()
+        }
 
         // subscribe to form submit event
         JFCustomWidget.subscribe('submit', () => {
-          const durationValue = [...new FormData(form).values()]
-            .map((val) => val || '00')
-            .join(':')
+          const durationValue = allFieldsEmpty()
+            ? ''
+            : [...new FormData(form).values()]
+                .map((val) => val || '00')
+                .join(':')
 
-          //temp
-          console.log('durationValue', durationValue)
+          // console.log('durationValue', durationValue)
 
           if (!wasValidated) {
             validate('seconds', form.seconds.value)
