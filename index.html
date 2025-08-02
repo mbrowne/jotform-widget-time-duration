@@ -87,6 +87,7 @@
       const integerRegex = /^\d+$/
       const errorsContainer = document.getElementById('errors')
       const validationErrors = new Map()
+      let wasValidated = false
 
       let prevValue = ''
       form.addEventListener('input', (e) => {
@@ -150,22 +151,26 @@
         } else {
           errorsContainer.innerHTML = [...validationErrors.values()][0]
         }
+
+        wasValidated = true
       }
 
       JFCustomWidget.subscribe('ready', () => {
+        // Set validity to false by default
+        JFCustomWidget.setWidgetValidity(false)
+
         // subscribe to form submit event
         JFCustomWidget.subscribe('submit', () => {
           const durationValue = [...new FormData(form).values()]
             .map((val) => val || '00')
             .join(':')
-          // console.log('durationValue', durationValue)
-          // TEMP
-          alert(
-            'durationValue ' +
-              durationValue +
-              ', validationErrors.size: ' +
-              validationErrors.size
-          )
+
+          //temp
+          console.log('durationValue', durationValue)
+
+          if (!wasValidated) {
+            validate('seconds', form.seconds.value)
+          }
 
           // send value to JotForm
           JFCustomWidget.sendSubmit({
