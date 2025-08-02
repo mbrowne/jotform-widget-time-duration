@@ -158,7 +158,14 @@
           const durationValue = [...new FormData(form).values()]
             .map((val) => val || '00')
             .join(':')
-          console.log('durationValue', durationValue)
+          // console.log('durationValue', durationValue)
+          // TEMP
+          alert(
+            'durationValue ' +
+              durationValue +
+              ', validationErrors.size: ' +
+              validationErrors.size
+          )
 
           // send value to JotForm
           JFCustomWidget.sendSubmit({
