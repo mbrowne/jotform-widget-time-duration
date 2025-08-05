@@ -52,7 +52,7 @@
             type="text"
             id="hours"
             name="hours"
-            maxlength="2"
+            maxlength="3"
             inputmode="numeric"
           />
         </label>
@@ -131,7 +131,7 @@
       })
 
       function validate(fieldName, value) {
-        if (value != '' && parseInt(value) > 59) {
+        if (value != '' && fieldName != 'hours' && parseInt(value) > 59) {
           const errMsg = `Invalid value for ${fieldName}`
           validationErrors.set(fieldName, errMsg)
         } else {
