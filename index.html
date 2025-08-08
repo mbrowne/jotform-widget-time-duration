@@ -52,7 +52,7 @@
             type="text"
             id="hours"
             name="hours"
-            maxlength="2"
+            maxlength="3"
             inputmode="numeric"
           />
         </label>
@@ -101,7 +101,7 @@
           prevValue = value
         }
 
-        validate(e.target.name, value)
+        validateField(e.target.name, value)
       })
 
       form.addEventListener('focusout', (e) => {
@@ -112,6 +112,8 @@
           target.value = '00'
         }
 
+        validateField(target.name, target.value)
+        validateGeneral()
         JFCustomWidget.setWidgetValidity(validationErrors.size == 0)
       })
 
@@ -128,28 +130,51 @@
         }
       })
 
-      function validate(fieldName, value) {
-        if (value != '' && parseInt(value) > 59) {
+      function validateField(fieldName, value) {
+        if (value != '' && fieldName != 'hours' && parseInt(value) > 59) {
           const errMsg = `Invalid value for ${fieldName}`
           validationErrors.set(fieldName, errMsg)
-          errorsContainer.innerHTML = errMsg
-        } else if (validationErrors.has(fieldName)) {
+        } else {
           validationErrors.delete(fieldName)
-          if (validationErrors.size === 0) {
-            errorsContainer.innerHTML = ''
-          } else {
-            errorsContainer.innerHTML = [...validationErrors.values()][0]
-          }
+        }
+        renderValidationResult()
+      }
+
+      function validateGeneral() {
+        if (
+          JFCustomWidget.getWidgetSetting('CustomIsRequired') == 'Yes' &&
+          allFieldsEmpty()
+        ) {
+          validationErrors.set('allFieldsEmpty', 'Please enter a time.')
+        } else {
+          validationErrors.delete('allFieldsEmpty')
+        }
+        renderValidationResult()
+      }
+
+      function renderValidationResult() {
+        if (validationErrors.size === 0) {
+          errorsContainer.innerHTML = ''
+        } else {
+          errorsContainer.innerHTML = [...validationErrors.values()][0]
         }
       }
 
       JFCustomWidget.subscribe('ready', () => {
+        if (JFCustomWidget.getWidgetSetting('CustomIsRequired') == 'Yes') {
+          JFCustomWidget.makeWidgetRequired()
+        }
+
         // subscribe to form submit event
         JFCustomWidget.subscribe('submit', () => {
-          const durationValue = [...new FormData(form).values()]
-            .map((val) => val || '00')
-            .join(':')
+          const durationValue = allFieldsEmpty()
+            ? ''
+            : [...new FormData(form).values()]
+                .map((val) => val || '00')
+                .join(':')
+
           // console.log('durationValue', durationValue)
+          validateGeneral()
 
           // send value to JotForm
           JFCustomWidget.sendSubmit({
