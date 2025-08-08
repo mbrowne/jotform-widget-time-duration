@@ -87,7 +87,6 @@
       const integerRegex = /^\d+$/
       const errorsContainer = document.getElementById('errors')
       const validationErrors = new Map()
-      let wasValidated = false
 
       let prevValue = ''
       form.addEventListener('input', (e) => {
@@ -102,7 +101,7 @@
           prevValue = value
         }
 
-        validate(e.target.name, value)
+        validateField(e.target.name, value)
       })
 
       form.addEventListener('focusout', (e) => {
@@ -113,8 +112,9 @@
           target.value = '00'
         }
 
-        validate(target.name, target.value)
-        // JFCustomWidget.setWidgetValidity(validationErrors.size == 0)
+        validateField(target.name, target.value)
+        validateGeneral()
+        JFCustomWidget.setWidgetValidity(validationErrors.size == 0)
       })
 
       function allFieldsEmpty() {
@@ -130,35 +130,37 @@
         }
       })
 
-      function validate(fieldName, value) {
+      function validateField(fieldName, value) {
         if (value != '' && fieldName != 'hours' && parseInt(value) > 59) {
           const errMsg = `Invalid value for ${fieldName}`
           validationErrors.set(fieldName, errMsg)
         } else {
           validationErrors.delete(fieldName)
-          validationErrors.delete('allFieldsEmpty')
         }
+        renderValidationResult()
+      }
 
+      function validateGeneral() {
         if (
           JFCustomWidget.getWidgetSetting('CustomIsRequired') == 'Yes' &&
           allFieldsEmpty()
         ) {
           validationErrors.set('allFieldsEmpty', 'Please enter a time.')
+        } else {
+          validationErrors.delete('allFieldsEmpty')
         }
+        renderValidationResult()
+      }
 
+      function renderValidationResult() {
         if (validationErrors.size === 0) {
           errorsContainer.innerHTML = ''
         } else {
           errorsContainer.innerHTML = [...validationErrors.values()][0]
         }
-
-        wasValidated = true
       }
 
       JFCustomWidget.subscribe('ready', () => {
-        // Set validity to false by default
-        // JFCustomWidget.setWidgetValidity(false)
-
         if (JFCustomWidget.getWidgetSetting('CustomIsRequired') == 'Yes') {
           JFCustomWidget.makeWidgetRequired()
         }
@@ -172,10 +174,7 @@
                 .join(':')
 
           // console.log('durationValue', durationValue)
-
-          if (!wasValidated) {
-            validate('seconds', form.seconds.value)
-          }
+          validateGeneral()
 
           // send value to JotForm
           JFCustomWidget.sendSubmit({
