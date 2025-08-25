@@ -176,6 +176,13 @@
           // console.log('durationValue', durationValue)
           validateGeneral()
 
+          // temp
+          const data = {
+            valid: validationErrors.size == 0,
+            value: durationValue,
+          }
+          console.log('data for sendSubmit', data)
+
           // send value to JotForm
           JFCustomWidget.sendSubmit({
             valid: validationErrors.size == 0,
