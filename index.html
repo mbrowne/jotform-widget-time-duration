@@ -114,6 +114,7 @@
 
         validateField(target.name, target.value)
         validateGeneral()
+        JFCustomWidget.setWidgetValidity(validationErrors.size == 0)
       })
 
       function allFieldsEmpty() {
@@ -159,11 +160,11 @@
         }
       }
 
-      JFCustomWidget.subscribe('ready', () => {
-        if (JFCustomWidget.getWidgetSetting('CustomIsRequired') == 'Yes') {
-          JFCustomWidget.makeWidgetRequired()
-        }
+      if (JFCustomWidget.getWidgetSetting('CustomIsRequired') == 'Yes') {
+        JFCustomWidget.makeWidgetRequired()
+      }
 
+      JFCustomWidget.subscribe('ready', () => {
         // subscribe to form submit event
         JFCustomWidget.subscribe('submit', () => {
           const durationValue = allFieldsEmpty()
