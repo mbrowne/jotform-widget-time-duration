@@ -114,7 +114,6 @@
 
         validateField(target.name, target.value)
         validateGeneral()
-        JFCustomWidget.setWidgetValidity(validationErrors.size == 0)
       })
 
       function allFieldsEmpty() {
@@ -164,30 +163,30 @@
         JFCustomWidget.makeWidgetRequired()
       }
 
-      JFCustomWidget.subscribe('ready', () => {
-        // subscribe to form submit event
-        JFCustomWidget.subscribe('submit', () => {
-          const durationValue = allFieldsEmpty()
-            ? ''
-            : [...new FormData(form).values()]
-                .map((val) => val || '00')
-                .join(':')
+      // JFCustomWidget.subscribe('ready', () => {
 
-          // console.log('durationValue', durationValue)
-          validateGeneral()
+      // })
 
-          // temp
-          const data = {
-            valid: validationErrors.size == 0,
-            value: durationValue,
-          }
-          console.log('data for sendSubmit', data)
+      // subscribe to form submit event
+      JFCustomWidget.subscribe('submit', () => {
+        const durationValue = allFieldsEmpty()
+          ? ''
+          : [...new FormData(form).values()].map((val) => val || '00').join(':')
 
-          // send value to JotForm
-          JFCustomWidget.sendSubmit({
-            valid: validationErrors.size == 0,
-            value: durationValue,
-          })
+        // console.log('durationValue', durationValue)
+        validateGeneral()
+
+        // temp
+        const data = {
+          valid: validationErrors.size == 0,
+          value: durationValue,
+        }
+        console.log('data for sendSubmit', data)
+
+        // send value to JotForm
+        JFCustomWidget.sendSubmit({
+          valid: validationErrors.size == 0,
+          value: durationValue,
         })
       })
     </script>
