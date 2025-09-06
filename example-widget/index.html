@@ -17,6 +17,8 @@
         document.getElementById('labelText').innerHTML = label
         //subscribe to form submit event
         JFCustomWidget.subscribe('submit', function () {
+          console.log('passing valid: false')
+
           var msg = {
             //you should valid attribute to data for JotForm
             //to be able to use youw widget as required
