@@ -114,6 +114,16 @@
 
         validateField(target.name, target.value)
         validateGeneral()
+
+        if (validationErrors.size == 0) {
+          //temp
+          console.log('calling sendData')
+
+          JFCustomWidget.sendData({
+            valid: true,
+            value: buildDurationValue(),
+          })
+        }
       })
 
       function allFieldsEmpty() {
@@ -159,22 +169,26 @@
         }
       }
 
-      if (JFCustomWidget.getWidgetSetting('CustomIsRequired') == 'Yes') {
-        JFCustomWidget.makeWidgetRequired()
-      }
+      // if (JFCustomWidget.getWidgetSetting('CustomIsRequired') == 'Yes') {
+      //   JFCustomWidget.makeWidgetRequired()
+      // }
 
       // JFCustomWidget.subscribe('ready', () => {
 
       // })
 
-      // subscribe to form submit event
-      JFCustomWidget.subscribe('submit', () => {
-        const durationValue = allFieldsEmpty()
+      function buildDurationValue() {
+        return allFieldsEmpty()
           ? ''
           : [...new FormData(form).values()].map((val) => val || '00').join(':')
+      }
+
+      // subscribe to form submit event
+      JFCustomWidget.subscribe('submit', () => {
+        const durationValue = buildDurationValue()
 
         // console.log('durationValue', durationValue)
-        validateGeneral()
+        // validateGeneral()
 
         // temp
         const data = {
