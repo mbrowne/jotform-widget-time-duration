@@ -151,7 +151,7 @@
 
       function validateGeneral() {
         if (
-          JFCustomWidget.getWidgetSetting('CustomIsRequired') == 'Yes' &&
+          JFCustomWidget.getWidgetSetting('Required') == 'Yes' &&
           allFieldsEmpty()
         ) {
           validationErrors.set('allFieldsEmpty', 'Please enter a time.')
@@ -169,26 +169,24 @@
         }
       }
 
-      // if (JFCustomWidget.getWidgetSetting('CustomIsRequired') == 'Yes') {
-      //   JFCustomWidget.makeWidgetRequired()
-      // }
-
-      // JFCustomWidget.subscribe('ready', () => {
-
-      // })
-
       function buildDurationValue() {
         return allFieldsEmpty()
           ? ''
           : [...new FormData(form).values()].map((val) => val || '00').join(':')
       }
 
+      JFCustomWidget.subscribe('ready', () => {
+        const r1 = JFCustomWidget.getWidgetSetting('Required')
+        console.log('r1', JSON.stringify(r1))
+
+        const r2 = JFCustomWidget.getWidgetSetting('required')
+        console.log('r2', JSON.stringify(r2))
+      })
+
       // subscribe to form submit event
       JFCustomWidget.subscribe('submit', () => {
         const durationValue = buildDurationValue()
-
-        // console.log('durationValue', durationValue)
-        // validateGeneral()
+        validateGeneral()
 
         // temp
         const data = {
